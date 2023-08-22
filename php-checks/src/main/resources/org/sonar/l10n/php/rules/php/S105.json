@@ -1,0 +1,17 @@
+{
+  "title": "Tabulation characters should not be used",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "convention",
+    "psr2"
+  ],
+  "defaultSeverity": "Minor",
+  "ruleSpecification": "RSPEC-105",
+  "sqKey": "S105",
+  "scope": "All"
+}
