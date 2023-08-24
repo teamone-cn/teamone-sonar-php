@@ -20,24 +20,36 @@
 package org.sonar.php.checks.utils;
 
 import com.google.common.collect.ImmutableSet;
-import java.util.Locale;
-import java.util.Set;
+
+import java.io.File;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.plugins.php.api.tree.Tree.Kind;
 import org.sonar.plugins.php.api.tree.declaration.NamespaceNameTree;
 import org.sonar.plugins.php.api.tree.expression.ExpressionTree;
 import org.sonar.plugins.php.api.tree.expression.FunctionCallTree;
+import org.sonar.plugins.php.api.visitors.PHPCheck;
 import org.sonar.plugins.php.api.visitors.PHPVisitorCheck;
 
 public abstract class FunctionUsageCheck extends PHPVisitorCheck {
 
   private Set lowerCaseFunctionNames;
 
+  protected HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> customCfg;
+
   protected abstract ImmutableSet<String> functionNames();
+
+  // 所有文件（带目录）的名称
+  protected static HashSet<String> fileNames;
 
   @Override
   public void init() {
     super.init();
+    this.customCfg = super.customCfg;
+    this.fileNames = super.fileNames;
+
     lowerCaseFunctionNames = functionNames().stream()
       .map(name -> name.toLowerCase(Locale.ROOT))
       .collect(Collectors.toSet());

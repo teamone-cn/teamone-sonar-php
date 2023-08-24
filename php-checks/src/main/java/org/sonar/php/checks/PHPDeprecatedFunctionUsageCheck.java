@@ -21,8 +21,11 @@ package org.sonar.php.checks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.function.Predicate;
+
 import org.sonar.check.Rule;
 import org.sonar.php.checks.utils.CheckUtils;
 import org.sonar.php.checks.utils.FunctionUsageCheck;
@@ -49,6 +52,9 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
   private static final String SESSION = "$_SESSION";
   private static final String FGETSS_FUNCTION = "fgetss";
   private static final String GZGETSS_FUNCTION = "gzgetss";
+
+  // 自定义提示说明
+  private static final String MESSAGE_CUSTOM = "不要使用这个过期函数 \"%s()\".";
 
   private static final ImmutableMap<String, String> NEW_BY_DEPRECATED_FUNCTIONS = ImmutableMap.<String, String>builder()
     .put("call_user_method", "call_user_func()")
@@ -108,6 +114,7 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
 
   private static final Predicate<TreeValues> SPLFILEOBJECT_FGETSS = new ObjectMemberFunctionCall(FGETSS_FUNCTION, new NewObjectCall("SplFileObject"));
 
+
   @Override
   protected ImmutableSet<String> functionNames() {
     return ImmutableSet.<String>builder()
@@ -117,8 +124,11 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
       .add(PARSE_STR_FUNCTION)
       .add(ASSERT_FUNCTION)
       .add(DEFINE_FUNCTION)
+      //todo 这里需要添加
+      .addAll(CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg))
       .build();
   }
+
   @Override
   public void visitFunctionCall(FunctionCallTree tree) {
     TreeValues possibleValues = TreeValues.of(tree, context().symbolTable());
@@ -168,6 +178,16 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
   @Override
   protected void createIssue(FunctionCallTree tree) {
     String functionName = ((NamespaceNameTree) tree.callee()).qualifiedName();
+    String customFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
+    String customQualifiedFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
+    HashSet<String> customRuleSet = CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg);
+
+    System.out.println("customFunctionName----" + customFunctionName);
+    System.out.println("customQualifiedFunctionName----" + customQualifiedFunctionName);
+//    System.out.println(CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg));
+    System.out.println("判断1----" + (null != customRuleSet));
+    System.out.println("判断2----" + (customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))));
+
 
     if (SET_LOCALE_FUNCTION.equalsIgnoreCase(functionName)) {
       checkLocalCategoryArgument(tree.arguments());
@@ -184,10 +204,20 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
     } else if (SEARCHING_STRING_FUNCTIONS.contains(functionName.toLowerCase(Locale.ROOT))) {
       checkSearchingStringArguments(tree);
 
+    }
+    // 通过配置转换得到的对应项目的不能使用的函数名称
+    else if (null != customRuleSet && customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))) {
+
+      checkCustomDeprecatedFunctions(tree, customFunctionName);
+
     } else {
       context().newIssue(this, tree.callee(), buildMessage(functionName));
     }
 
+  }
+
+  private void checkCustomDeprecatedFunctions(FunctionCallTree tree, String customFunctionName) {
+    context().newIssue(this, tree.callee(), String.format(MESSAGE_CUSTOM, customFunctionName));
   }
 
   /**

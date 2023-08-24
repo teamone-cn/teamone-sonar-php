@@ -22,15 +22,15 @@ package org.sonar.php.checks.utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.php.tree.impl.PHPTree;
 import org.sonar.plugins.php.api.tree.Tree;
@@ -52,6 +52,14 @@ import org.sonar.plugins.php.api.visitors.PhpFile;
 
 public final class CheckUtils {
 
+  private static final String CUSTOM_RULE_ACTIVE_FLAG_N = "N";
+
+  private static final String CUSTOM_RULE_ACTIVE_FLAG_Y = "Y";
+
+  private static final String CUSTOM_RULE_FIRST_SPLIT = "/";
+
+  private static final String CUSTOM_RULE_SECOND_SPLIT = "\\.";
+
   private static final Kind[] FUNCTION_KINDS_ARRAY = {
     Kind.METHOD_DECLARATION,
     Kind.FUNCTION_DECLARATION,
@@ -70,7 +78,7 @@ public final class CheckUtils {
     .put("$HTTP_COOKIE_VARS", "$_COOKIE").build();
 
   public static final ImmutableSet<String> SUPERGLOBALS = ImmutableSet.of(
-      "$GLOBALS", "$_SERVER", "$_GET", "$_POST", "$_FILES", "$_COOKIE", "$_SESSION", "$_REQUEST", "$_ENV");
+    "$GLOBALS", "$_SERVER", "$_GET", "$_POST", "$_FILES", "$_COOKIE", "$_SESSION", "$_REQUEST", "$_ENV");
 
   private CheckUtils() {
   }
@@ -250,5 +258,75 @@ public final class CheckUtils {
     }
     return false;
   }
+
+  public static HashSet<String> getRulesContents(HashSet<String> fileNames, String key, HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> cfg) {
+    // 先拆解每次获取到的fileName的目录和文件到集合中
+    // 类似 /wp-content/themes/tunefabjp/xxxx.php
+    // 拆解后变为 {"wp-content","themes","tunefabjp","xxxx"}
+    ArrayList<String> fileNameList = new ArrayList<>();
+    for (String fileName : fileNames) {
+      if (StringUtils.isNotBlank(fileName)) {
+        for (String fileSplitName : fileName.split(CUSTOM_RULE_FIRST_SPLIT)) {
+          if (StringUtils.isNotBlank(fileSplitName)) {
+            fileNameList.addAll(Arrays.asList(fileSplitName.split(CUSTOM_RULE_SECOND_SPLIT)));
+          }
+        }
+      }
+    }
+
+    String projectName = "";
+    Iterator<String> cfgIterator = cfg.keySet().iterator();
+    while (cfgIterator.hasNext()) {
+      String curProjectName = cfgIterator.next();
+      if (fileNameList.contains(curProjectName)) {
+        projectName = curProjectName;
+      }
+    }
+
+    HashSet<String> contents = null;
+    HashMap<String, HashSet<String>> activeJudge = null;
+
+    if (StringUtils.isNotBlank(projectName)) {
+      activeJudge = cfg.get(projectName).get(key);
+      if (null != activeJudge) {
+        Iterator<String> iterator = activeJudge.keySet().iterator();
+        while (iterator.hasNext()) {
+          if (iterator.next().equals(CUSTOM_RULE_ACTIVE_FLAG_N)) {
+            return null;
+          }
+        }
+      }
+    }
+
+    if (null != activeJudge) {
+      contents = activeJudge.get(CUSTOM_RULE_ACTIVE_FLAG_Y);
+    }
+
+    return contents;
+  }
+
+
+//  public static void main(String[] args) {
+//
+//    HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> stringHashMapHashMap = new HashMap<>();
+//    HashMap<String, HashMap<String, HashSet<String>>> stringHashMapHashMap1 = new HashMap<>();
+//    HashMap<String, HashSet<String>> stringHashSetHashMap = new HashMap<>();
+//    HashSet<String> strings = new HashSet<>();
+//    strings.add("mcrypt_decrypt");
+//    strings.add("mcrypt_encrypt");
+//    stringHashSetHashMap.put("Y", strings);
+//    stringHashMapHashMap1.put("S2001", stringHashSetHashMap);
+//    stringHashMapHashMap.put("tunefabjp", stringHashMapHashMap1);
+//
+//    HashSet<String> fileNames = new HashSet<>();
+//    fileNames.add("/wp-content/ccc/tunefabjp/aaa.php");
+//    fileNames.add("/wp-content/ccc/tunefabjp/bbb.php");
+//
+//
+////    System.out.println(judgeRulesBelongs(fileName,stringHashMapHashMap));
+//    System.out.println(getRulesContents(fileNames, "S2001", stringHashMapHashMap));
+//
+//  }
+
 
 }

@@ -19,10 +19,14 @@
  */
 package org.sonar.plugins.php.api.visitors;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.sonar.php.tree.impl.PHPTree;
 import org.sonar.php.tree.visitors.PHPCheckContext;
+import org.sonar.plugins.php.api.cfg.CustomJsonCfgGet;
 import org.sonar.plugins.php.api.symbols.QualifiedName;
 import org.sonar.plugins.php.api.symbols.Symbol;
 import org.sonar.plugins.php.api.symbols.SymbolTable;
@@ -117,10 +121,17 @@ public abstract class PHPVisitorCheck implements VisitorCheck {
 
   private CheckContext context;
 
+  protected HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> customCfg;
+
+  // 所有文件（带目录）的名称
+  protected static HashSet<String> fileNames;
+
   @Override
   public void init() {
-    // Default behavior : do nothing.
+    // 初始化配置
+    this.customCfg = CustomJsonCfgGet.getCustomJson();
   }
+
 
   @Override
   public void visitToken(SyntaxToken token) {
@@ -599,5 +610,13 @@ public abstract class PHPVisitorCheck implements VisitorCheck {
       throw new IllegalStateException("Symbol not found for " + namespaceNameTree + " at " + context.getPhpFile() + ":" + ((PHPTree) namespaceNameTree).getFirstToken().line());
     }
     return symbol.qualifiedName();
+  }
+
+  /**
+   * 自定义方法，从 PHPSensor 获取到所有文件的名称
+   * @param fileNameSet
+   */
+  public static void setFileNameSet(HashSet<String> fileNameSet){
+    fileNames=fileNameSet;
   }
 }

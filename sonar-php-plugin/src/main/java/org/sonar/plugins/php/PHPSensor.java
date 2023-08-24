@@ -22,12 +22,16 @@ package org.sonar.plugins.php;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.sonar.sslr.api.RecognitionException;
+
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+
 import org.sonar.api.SonarProduct;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
@@ -55,13 +59,7 @@ import org.sonar.php.metrics.CpdVisitor.CpdToken;
 import org.sonar.php.metrics.FileMeasures;
 import org.sonar.php.tree.visitors.LegacyIssue;
 import org.sonar.plugins.php.api.Php;
-import org.sonar.plugins.php.api.visitors.FileIssue;
-import org.sonar.plugins.php.api.visitors.IssueLocation;
-import org.sonar.plugins.php.api.visitors.LineIssue;
-import org.sonar.plugins.php.api.visitors.PHPCustomRuleRepository;
-import org.sonar.plugins.php.api.visitors.PHPCustomRulesDefinition;
-import org.sonar.plugins.php.api.visitors.PhpIssue;
-import org.sonar.plugins.php.api.visitors.PreciseIssue;
+import org.sonar.plugins.php.api.visitors.*;
 import org.sonar.plugins.php.phpunit.CoverageResultImporter;
 import org.sonar.plugins.php.phpunit.TestResultImporter;
 import org.sonar.squidbridge.ProgressReport;
@@ -69,6 +67,8 @@ import org.sonar.squidbridge.ProgressReport;
 public class PHPSensor implements Sensor {
 
   private static final Logger LOG = Loggers.get(PHPSensor.class);
+
+  public static HashSet<String> fileNameSet = new HashSet<>();
   private final FileLinesContextFactory fileLinesContextFactory;
   private final PHPChecks checks;
   private final NoSonarFilter noSonarFilter;
@@ -76,12 +76,12 @@ public class PHPSensor implements Sensor {
   private RuleKey parsingErrorRuleKey;
 
   public PHPSensor(FileLinesContextFactory fileLinesContextFactory,
-    CheckFactory checkFactory, NoSonarFilter noSonarFilter) {
+                   CheckFactory checkFactory, NoSonarFilter noSonarFilter) {
     this(fileLinesContextFactory, checkFactory, noSonarFilter, null);
   }
 
   public PHPSensor(FileLinesContextFactory fileLinesContextFactory,
-    CheckFactory checkFactory, NoSonarFilter noSonarFilter, @Nullable PHPCustomRuleRepository[] customRuleRepositories) {
+                   CheckFactory checkFactory, NoSonarFilter noSonarFilter, @Nullable PHPCustomRuleRepository[] customRuleRepositories) {
 
     this.checks = PHPChecks.createPHPCheck(checkFactory)
       .addChecks(CheckList.REPOSITORY_KEY, CheckList.getChecks())
@@ -110,13 +110,20 @@ public class PHPSensor implements Sensor {
       fileSystem.predicates().hasType(InputFile.Type.MAIN),
       fileSystem.predicates().hasLanguage(Php.KEY));
 
-    PHPAnalyzer phpAnalyzer = new PHPAnalyzer(ImmutableList.copyOf(checks.all()), fileSystem.workDir());
-
     List<InputFile> inputFiles = new ArrayList<>();
     fileSystem.inputFiles(mainFilePredicate).forEach(inputFiles::add);
 
+    for (InputFile inputFile : inputFiles) {
+      fileNameSet.add(inputFile.relativePath());
+    }
+
+    PHPVisitorCheck.setFileNameSet(fileNameSet);
+    PHPSubscriptionCheck.setFileNameSet(fileNameSet);
+
     ProgressReport progressReport = new ProgressReport("Report about progress of PHP analyzer", TimeUnit.SECONDS.toMillis(10));
     progressReport.start(inputFiles.stream().map(InputFile::toString).collect(Collectors.toList()));
+
+    PHPAnalyzer phpAnalyzer = new PHPAnalyzer(ImmutableList.copyOf(checks.all()), fileSystem.workDir());
 
     try {
       analyseFiles(context, phpAnalyzer, inputFiles, progressReport);

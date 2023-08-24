@@ -97,6 +97,8 @@
     <version.sonarlint>4.7.0.12286</version.sonarlint>
     <version.analyzer-commons>1.10.2.456</version.analyzer-commons>
 
+    <version.fastJson>1.2.83</version.fastJson>
+
     <!-- Release: enable publication to Bintray -->
     <artifactsToPublish>${project.groupId}:sonar-php-plugin:jar</artifactsToPublish>
 
@@ -170,7 +172,11 @@
         <artifactId>jsr305</artifactId>
         <version>1.3.9</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${version.fastJson}</version>
+      </dependency>
 
       <!-- Test dependencies -->
       <dependency>
