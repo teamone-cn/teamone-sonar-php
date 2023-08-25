@@ -292,7 +292,7 @@ public final class CheckUtils {
         Iterator<String> iterator = activeJudge.keySet().iterator();
         while (iterator.hasNext()) {
           if (iterator.next().equals(CUSTOM_RULE_ACTIVE_FLAG_N)) {
-            return null;
+            return new HashSet<>();
           }
         }
       }

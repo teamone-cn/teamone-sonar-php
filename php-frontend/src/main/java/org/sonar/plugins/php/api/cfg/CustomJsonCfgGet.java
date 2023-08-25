@@ -26,8 +26,8 @@ public class CustomJsonCfgGet {
    * @return
    */
   public static HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> getCustomJson() {
-    String json = "{\"tunefabjp\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mktime\",\"split\"],\"ruleActive\":\"N\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[\"xxxx\"],\"ruleActive\":\"Y\"}],\"tunefabde\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"create_function\"],\"ruleActive\":\"Y\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[],\"ruleActive\":\"N\"}],\"wp-data\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}],\"wp-order\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_decrypt\"],\"ruleActive\":\"Y\"}]}";
-    // 构建映射关系，项目内容
+    String json ="{\"tunefabjp\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mktime\",\"split\"],\"ruleActive\":\"N\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[\"xxxx\"],\"ruleActive\":\"Y\"}],\"tunefabde\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"create_function\"],\"ruleActive\":\"Y\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[],\"ruleActive\":\"N\"}],\"wp-data\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}],\"wp-order\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_decrypt\",\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}]}";
+      // 构建映射关系，项目内容
     HashSet<String> contents;
 
     // 构建映射关系，对应的顺序为：项目规则启用标志 -- 项目内容
