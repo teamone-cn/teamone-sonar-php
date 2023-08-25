@@ -21,16 +21,14 @@ package org.sonar.php.checks.utils;
 
 import com.google.common.collect.ImmutableSet;
 
-import java.io.File;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.plugins.php.api.tree.Tree.Kind;
 import org.sonar.plugins.php.api.tree.declaration.NamespaceNameTree;
 import org.sonar.plugins.php.api.tree.expression.ExpressionTree;
 import org.sonar.plugins.php.api.tree.expression.FunctionCallTree;
-import org.sonar.plugins.php.api.visitors.PHPCheck;
 import org.sonar.plugins.php.api.visitors.PHPVisitorCheck;
 
 public abstract class FunctionUsageCheck extends PHPVisitorCheck {

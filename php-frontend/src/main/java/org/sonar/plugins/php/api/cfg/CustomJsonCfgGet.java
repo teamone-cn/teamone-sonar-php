@@ -53,7 +53,6 @@ public class CustomJsonCfgGet {
       // 2、插件项目的 xxxx.php 的具体插件的名称
       // 3、内部项目的 /xxxx 的具体项目的空目录的名称
       String projectName = keySet.next();
-//      System.out.println(projectName);
 
       // 获取到每个项目的具体的配置
       JSONArray jsonArray = jsonObject.getJSONArray(projectName);
@@ -65,18 +64,14 @@ public class CustomJsonCfgGet {
         JSONObject projectRule = jsonArray.getJSONObject(i);
         // 对应项目规则下的key，可以对于到 sonar-php 的key，也是页面上有展示的 key
         String projectRuleKey = projectRule.getString(JSON_RULE_KEY);
-//        System.out.println("projectRuleKey---" + projectRuleKey);
         // 对应项目规则下具体的内容，例如可以进行 包含这些字段，不包含这些字段，这里就是用来定义这些字段的地方
         JSONArray projectRuleContents = projectRule.getJSONArray(JSON_RULE_CONTENT);
         // 对应项目规则是否启用，Y 为启用，N 为未启用
         String projectActiveFlag = projectRule.getString(JSON_RULE_ACTIVE);
-//        System.out.println("projectRuleActive---" + projectActiveFlag);
-
 
         for (int j = 0; j < projectRuleContents.size(); j++) {
           // 获取到每个规则具体内容
           String projectRuleContent = projectRuleContents.getString(j);
-//          System.out.println("projectRuleContent---" + projectRuleContent);
           contents.add(projectRuleContent);
         }
         activeContentMap.put(projectActiveFlag, contents);

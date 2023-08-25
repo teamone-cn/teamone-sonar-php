@@ -124,7 +124,7 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
       .add(PARSE_STR_FUNCTION)
       .add(ASSERT_FUNCTION)
       .add(DEFINE_FUNCTION)
-      //todo 这里需要添加
+      //todo 如下面添加的代码，这里需要添加自定义的方法，才会生效
       .addAll(CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg))
       .build();
   }
@@ -179,14 +179,15 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
   protected void createIssue(FunctionCallTree tree) {
     String functionName = ((NamespaceNameTree) tree.callee()).qualifiedName();
     String customFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
-    String customQualifiedFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
+
     HashSet<String> customRuleSet = CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg);
 
-    System.out.println("customFunctionName----" + customFunctionName);
-    System.out.println("customQualifiedFunctionName----" + customQualifiedFunctionName);
+//    String customQualifiedFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
+//    System.out.println("customFunctionName----" + customFunctionName);
+//    System.out.println("customQualifiedFunctionName----" + customQualifiedFunctionName);
 //    System.out.println(CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg));
-    System.out.println("判断1----" + (null != customRuleSet));
-    System.out.println("判断2----" + (customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))));
+//    System.out.println("判断1----" + (null != customRuleSet));
+//    System.out.println("判断2----" + (customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))));
 
 
     if (SET_LOCALE_FUNCTION.equalsIgnoreCase(functionName)) {
@@ -207,7 +208,6 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
     }
     // 通过配置转换得到的对应项目的不能使用的函数名称
     else if (null != customRuleSet && customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))) {
-
       checkCustomDeprecatedFunctions(tree, customFunctionName);
 
     } else {

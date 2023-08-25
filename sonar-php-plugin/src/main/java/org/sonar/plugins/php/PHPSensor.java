@@ -113,10 +113,12 @@ public class PHPSensor implements Sensor {
     List<InputFile> inputFiles = new ArrayList<>();
     fileSystem.inputFiles(mainFilePredicate).forEach(inputFiles::add);
 
+    // 自定义获取到文件目录
     for (InputFile inputFile : inputFiles) {
       fileNameSet.add(inputFile.relativePath());
     }
 
+    // 设置添加到主check接口，通过主check接口来传递该对象
     PHPVisitorCheck.setFileNameSet(fileNameSet);
     PHPSubscriptionCheck.setFileNameSet(fileNameSet);
 

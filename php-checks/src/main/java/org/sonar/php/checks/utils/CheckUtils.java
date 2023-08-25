@@ -274,6 +274,7 @@ public final class CheckUtils {
       }
     }
 
+    // 遍历最外层的项目名称，获取到对应的HashMap配置
     String projectName = "";
     Iterator<String> cfgIterator = cfg.keySet().iterator();
     while (cfgIterator.hasNext()) {
@@ -286,6 +287,7 @@ public final class CheckUtils {
     HashSet<String> contents = null;
     HashMap<String, HashSet<String>> activeJudge = null;
 
+    // 逐层遍历获取到最后的装有实际配置的 HashSet 并返回
     if (StringUtils.isNotBlank(projectName)) {
       activeJudge = cfg.get(projectName).get(key);
       if (null != activeJudge) {
@@ -297,7 +299,6 @@ public final class CheckUtils {
         }
       }
     }
-
     if (null != activeJudge) {
       contents = activeJudge.get(CUSTOM_RULE_ACTIVE_FLAG_Y);
     }
