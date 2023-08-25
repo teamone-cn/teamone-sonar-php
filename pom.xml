@@ -98,7 +98,7 @@
     <version.analyzer-commons>1.10.2.456</version.analyzer-commons>
 
     <version.fastJson>1.2.83</version.fastJson>
-
+    <version.ganymed>262</version.ganymed>
     <!-- Release: enable publication to Bintray -->
     <artifactsToPublish>${project.groupId}:sonar-php-plugin:jar</artifactsToPublish>
 
@@ -176,6 +176,11 @@
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>${version.fastJson}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.ethz.ganymed</groupId>
+        <artifactId>ganymed-ssh2</artifactId>
+        <version>${version.ganymed}</version>
       </dependency>
 
       <!-- Test dependencies -->

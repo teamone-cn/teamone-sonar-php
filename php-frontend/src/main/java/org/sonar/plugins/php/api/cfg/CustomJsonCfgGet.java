@@ -1,10 +1,17 @@
 package org.sonar.plugins.php.api.cfg;
 
 
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import org.apache.commons.lang.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 
@@ -19,6 +26,52 @@ public class CustomJsonCfgGet {
   // json中定义项目规则是否激活
   private static final String JSON_RULE_ACTIVE = "ruleActive";
 
+  private static final String REMOTE_IP = "192.168.60.25";
+  private static final int REMOTE_PORT = 22;
+  private static final String REMOTE_USERNAME = "sonarqube";
+  private static final String REMOTE_PASSWORD = "su2JTbV#pb!BeKsH";
+
+  private static final String REMOTE_CMD = "cat /home/sonarqube/config.json";
+
+  private static String cfgJson ;
+
+
+  public static void main(String[] args) {
+    System.out.println(getCustomJson());
+  }
+
+  public static String getCustomJsonString() {
+    Connection conn = new Connection(REMOTE_IP, REMOTE_PORT);
+    StringBuilder sb = new StringBuilder();
+    //连接
+    try {
+      conn.connect();
+      boolean isAuthed = conn.authenticateWithPassword(REMOTE_USERNAME, REMOTE_PASSWORD);
+      if (isAuthed == false) throw new IOException("Authentication failed.");
+      Session session = conn.openSession();
+      session.execCommand(REMOTE_CMD);
+
+      InputStream stdout = new StreamGobbler(session.getStdout());
+
+      BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+
+      while (true)
+      {
+        String line = br.readLine();
+        if (line == null)
+          break;
+//        System.out.println(line.trim());
+        sb.append(line);
+      }
+    }catch (Exception e){
+      e.printStackTrace();
+    }
+
+    conn.close();
+    return sb.toString();
+  }
+
+
   /**
    * 通过json字符串，获取到用于sonar-php的配置
    *
@@ -26,8 +79,13 @@ public class CustomJsonCfgGet {
    * @return
    */
   public static HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> getCustomJson() {
-    String json ="{\"tunefabjp\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mktime\",\"split\"],\"ruleActive\":\"N\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[\"xxxx\"],\"ruleActive\":\"Y\"}],\"tunefabde\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"create_function\"],\"ruleActive\":\"Y\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[],\"ruleActive\":\"N\"}],\"wp-data\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}],\"wp-order\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_decrypt\",\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}]}";
-      // 构建映射关系，项目内容
+//    String json = "{\"tunefabjp\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mktime\",\"split\"],\"ruleActive\":\"N\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[\"xxxx\"],\"ruleActive\":\"Y\"}],\"tunefabde\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"create_function\"],\"ruleActive\":\"Y\"},{\"ruleKey\":\"S2000\",\"ruleContent\":[],\"ruleActive\":\"N\"}],\"wp-data\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}],\"wp-order\":[{\"ruleKey\":\"S2001\",\"ruleContent\":[\"mcrypt_decrypt\",\"mcrypt_encrypt\"],\"ruleActive\":\"Y\"}]}";
+
+   if (!StringUtils.isNotBlank(cfgJson)){
+     cfgJson = getCustomJsonString();
+   }
+
+    // 构建映射关系，项目内容
     HashSet<String> contents;
 
     // 构建映射关系，对应的顺序为：项目规则启用标志 -- 项目内容
@@ -40,7 +98,7 @@ public class CustomJsonCfgGet {
     HashMap<String, HashMap<String, HashMap<String, HashSet<String>>>> projectRuleMap = new HashMap<>();
 
     // 获取到jsonObject
-    JSONObject jsonObject = JSONObject.parseObject(json);
+    JSONObject jsonObject = JSONObject.parseObject(cfgJson);
 
     // 获取最外层的key
     Iterator<String> keySet = jsonObject.keySet().iterator();
