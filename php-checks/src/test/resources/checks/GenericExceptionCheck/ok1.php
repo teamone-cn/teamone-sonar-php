@@ -14,3 +14,4 @@ class ClassName {
         throw new $className;
     }
 }
+
