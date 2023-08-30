@@ -182,14 +182,6 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
 
     HashSet<String> customRuleSet = CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg);
 
-//    String customQualifiedFunctionName = ((NamespaceNameTree) tree.callee()).name().toString();
-//    System.out.println("customFunctionName----" + customFunctionName);
-//    System.out.println("customQualifiedFunctionName----" + customQualifiedFunctionName);
-//    System.out.println(CheckUtils.getRulesContents(fileNames, PHPDeprecatedFunctionUsageCheck.KEY, customCfg));
-//    System.out.println("判断1----" + (null != customRuleSet));
-//    System.out.println("判断2----" + (customRuleSet.contains(customFunctionName.toLowerCase(Locale.ROOT))));
-
-
     if (SET_LOCALE_FUNCTION.equalsIgnoreCase(functionName)) {
       checkLocalCategoryArgument(tree.arguments());
 

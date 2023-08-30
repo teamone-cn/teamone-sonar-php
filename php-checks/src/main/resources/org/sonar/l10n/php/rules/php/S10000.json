@@ -1,0 +1,16 @@
+{
+  "title": "High risk function can not be used",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "1min"
+  },
+  "tags": [
+    "obsolete"
+  ],
+  "defaultSeverity": "Major",
+  "ruleSpecification": "RSPEC-10000",
+  "sqKey": "S10000",
+  "scope": "Main"
+}

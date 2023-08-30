@@ -222,7 +222,13 @@ public class CheckList {
       VariableVariablesCheck.class,
       VarKeywordUsageCheck.class,
       WeakSSLProtocolCheck.class,
-      WrongAssignmentOperatorCheck.class);
+      WrongAssignmentOperatorCheck.class,
+    // 以下是自定义的检查类
+      CustomHighRiskFunctionUsageCheck.class,
+      CustomMiddleRiskFunctionUsageCheck.class,
+      CustomLowRiskFunctionUsageCheck.class
+
+    );
   }
 
   public static Iterable<Class> getPhpIniChecks() {
