@@ -1,16 +1,16 @@
 {
-  "title": "High risk function can not be used",
-  "type": "CODE_SMELL",
+  "title": "谨慎使用危险函数",
+  "type": "VULNERABILITY",
   "status": "ready",
   "remediation": {
     "func": "Constant\/Issue",
-    "constantCost": "1min"
+    "constantCost": "2min"
   },
   "tags": [
     "obsolete"
   ],
-  "defaultSeverity": "Major",
+  "defaultSeverity": "Critical",
   "ruleSpecification": "RSPEC-10000",
   "sqKey": "S10000",
-  "scope": "Main"
+  "scope": "All"
 }

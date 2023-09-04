@@ -1,5 +1,5 @@
 {
-  "title": "Low risk function can not be used",
+  "title": "函数方法即将丢弃",
   "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
@@ -12,5 +12,5 @@
   "defaultSeverity": "Major",
   "ruleSpecification": "RSPEC-10002",
   "sqKey": "S10002",
-  "scope": "Main"
+  "scope": "All"
 }

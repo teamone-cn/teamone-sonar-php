@@ -131,6 +131,7 @@ public class PHPDeprecatedFunctionUsageCheck extends FunctionUsageCheck {
 
   @Override
   public void visitFunctionCall(FunctionCallTree tree) {
+
     TreeValues possibleValues = TreeValues.of(tree, context().symbolTable());
     if (SPLFILEOBJECT_FGETSS.test(possibleValues)) {
       context().newIssue(this, tree, String.format(MESSAGE_WITHOUT_REPLACEMENT, FGETSS_FUNCTION));

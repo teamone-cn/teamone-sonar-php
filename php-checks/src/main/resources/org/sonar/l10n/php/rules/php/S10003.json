@@ -1,0 +1,16 @@
+{
+  "title": "配置信息应直接配置",
+  "type": "BUG",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "obsolete"
+  ],
+  "defaultSeverity": "Info",
+  "ruleSpecification": "RSPEC-10003",
+  "sqKey": "S10003",
+  "scope": "All"
+}

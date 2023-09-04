@@ -32,19 +32,17 @@ public class CustomLowRiskFunctionUsageCheck extends FunctionUsageCheck {
 
   public static final String KEY = "S10002";
   // 自定义提示说明
-  private static final String MESSAGE_CUSTOM = "不要使用这个过期函数 \"%s()\".";
+  private static final String MESSAGE_CUSTOM = "(Teamone) \"%s()\" 方法即将丢弃，请尽快使用其他方式代替 ";
 
   private static final ImmutableSet<String> SEARCHING_STRING_FUNCTIONS = ImmutableSet.of(
-    "");
-
+    "fgetss","create_function");
 
 
   @Override
   protected ImmutableSet<String> functionNames() {
     return ImmutableSet.<String>builder()
+      // 这里需要添加自定义的方法，才会生效
       .addAll(SEARCHING_STRING_FUNCTIONS)
-      //todo 如下面添加的代码，这里需要添加自定义的方法，才会生效
-      //.addAll(CheckUtils.getRulesContents(fileNames, CustomHighRiskFunctionUsageCheck.KEY, customCfg))
       .build();
   }
 
@@ -59,5 +57,5 @@ public class CustomLowRiskFunctionUsageCheck extends FunctionUsageCheck {
   }
 
 
-  }
+}
 

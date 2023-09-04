@@ -19,39 +19,29 @@
  */
 package org.sonar.php.checks;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.sonar.check.Rule;
-import org.sonar.php.checks.utils.CheckUtils;
 import org.sonar.php.checks.utils.FunctionUsageCheck;
-import org.sonar.php.checks.utils.type.NewObjectCall;
-import org.sonar.php.checks.utils.type.ObjectMemberFunctionCall;
-import org.sonar.php.checks.utils.type.TreeValues;
-import org.sonar.plugins.php.api.tree.SeparatedList;
-import org.sonar.plugins.php.api.tree.Tree.Kind;
-import org.sonar.plugins.php.api.tree.declaration.FunctionDeclarationTree;
 import org.sonar.plugins.php.api.tree.declaration.NamespaceNameTree;
-import org.sonar.plugins.php.api.tree.expression.*;
+import org.sonar.plugins.php.api.tree.expression.FunctionCallTree;
 
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.function.Predicate;
 
-@Rule(key = CustomHighRiskFunctionUsageCheck.KEY)
-public class CustomHighRiskFunctionUsageCheck extends FunctionUsageCheck {
+@Rule(key = CustomLowRiskIniFunctionUsageCheck.KEY)
+public class CustomLowRiskIniFunctionUsageCheck extends FunctionUsageCheck {
 
-  public static final String KEY = "S10000";
+  public static final String KEY = "S10003";
   // 自定义提示说明
-  private static final String MESSAGE_CUSTOM = "(Teamone) 此方法危险，请谨慎使用 ";
+  private static final String MESSAGE_CUSTOM = "(Teamone) 建议直接配置，在php.ini里进行扩展的开启";
 
   private static final ImmutableSet<String> SEARCHING_STRING_FUNCTIONS = ImmutableSet.of(
-    "eval","exec","system","passthru","shell_exec","popen","assert","session_register","session_is_registered","session_unregister");
+    "dl");
 
 
   @Override
   protected ImmutableSet<String> functionNames() {
     return ImmutableSet.<String>builder()
-      //  这里需要添加自定义的方法，才会生效
+      // 这里需要添加自定义的方法，才会生效
       .addAll(SEARCHING_STRING_FUNCTIONS)
       .build();
   }
@@ -62,6 +52,7 @@ public class CustomHighRiskFunctionUsageCheck extends FunctionUsageCheck {
 
     if (null != SEARCHING_STRING_FUNCTIONS && SEARCHING_STRING_FUNCTIONS.contains(customFunctionName.toLowerCase(Locale.ROOT))) {
       context().newIssue(this, tree.callee(), String.format(MESSAGE_CUSTOM, customFunctionName));
+
     }
   }
 

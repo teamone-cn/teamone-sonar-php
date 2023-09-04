@@ -1,6 +1,6 @@
 {
-  "title": "Middle risk function can not be used",
-  "type": "CODE_SMELL",
+  "title": "禁止使用过期函数",
+  "type": "BUG",
   "status": "ready",
   "remediation": {
     "func": "Constant\/Issue",
@@ -9,8 +9,8 @@
   "tags": [
     "obsolete"
   ],
-  "defaultSeverity": "Major",
+  "defaultSeverity": "Blocker",
   "ruleSpecification": "RSPEC-10001",
   "sqKey": "S10001",
-  "scope": "Main"
+  "scope": "All"
 }

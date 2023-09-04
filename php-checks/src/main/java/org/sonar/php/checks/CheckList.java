@@ -226,7 +226,8 @@ public class CheckList {
     // 以下是自定义的检查类
       CustomHighRiskFunctionUsageCheck.class,
       CustomMiddleRiskFunctionUsageCheck.class,
-      CustomLowRiskFunctionUsageCheck.class
+      CustomLowRiskFunctionUsageCheck.class,
+      CustomLowRiskIniFunctionUsageCheck.class
 
     );
   }
