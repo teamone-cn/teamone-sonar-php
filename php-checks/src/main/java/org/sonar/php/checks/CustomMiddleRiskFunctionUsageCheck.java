@@ -32,7 +32,7 @@ public class CustomMiddleRiskFunctionUsageCheck extends FunctionUsageCheck {
 
   public static final String KEY = "S10001";
   // 自定义提示说明
-  private static final String MESSAGE_CUSTOM = "(Teamone) 不要使用 \"%s()\" 方法 ";
+  private static final String MESSAGE_CUSTOM = "(Teamone) \"%s()\" 方法已删除，禁止使用";
 
   private static final ImmutableSet<String> SEARCHING_STRING_FUNCTIONS = ImmutableSet.of(
     "call_user_method","call_user_method_array","define_syslog_variables","session_register","session_unregister",

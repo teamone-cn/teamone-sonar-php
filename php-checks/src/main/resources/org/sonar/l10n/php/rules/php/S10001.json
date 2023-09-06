@@ -1,5 +1,5 @@
 {
-  "title": "禁止使用过期函数",
+  "title": "禁止使用已被删除的函数",
   "type": "BUG",
   "status": "ready",
   "remediation": {

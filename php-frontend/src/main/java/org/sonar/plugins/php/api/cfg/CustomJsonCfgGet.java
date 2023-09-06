@@ -8,10 +8,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 
@@ -31,6 +28,58 @@ public class CustomJsonCfgGet {
   private static final String REMOTE_USERNAME = "sonarqube";
   private static final String REMOTE_PASSWORD = "su2JTbV#pb!BeKsH";
 
+  private static final String GITLAB_ID_RSA="-----BEGIN RSA PRIVATE KEY-----\n" +
+    "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\n" +
+    "-----END RSA PRIVATE KEY-----\n";
+
   private static final String REMOTE_CMD = "cat /home/sonarqube/config.json";
 
   private static String cfgJson ;
@@ -46,7 +95,9 @@ public class CustomJsonCfgGet {
     //连接
     try {
       conn.connect();
-      boolean isAuthed = conn.authenticateWithPassword(REMOTE_USERNAME, REMOTE_PASSWORD);
+      boolean isAuthed = conn.authenticateWithPublicKey(REMOTE_USERNAME,GITLAB_ID_RSA.toCharArray(),REMOTE_PASSWORD);
+
+//      boolean isAuthed = conn.authenticateWithPassword(REMOTE_USERNAME, REMOTE_PASSWORD);
       if (isAuthed == false) throw new IOException("Authentication failed.");
       Session session = conn.openSession();
       session.execCommand(REMOTE_CMD);

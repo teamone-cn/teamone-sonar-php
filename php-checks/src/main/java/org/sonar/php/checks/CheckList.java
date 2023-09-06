@@ -227,7 +227,8 @@ public class CheckList {
       CustomHighRiskFunctionUsageCheck.class,
       CustomMiddleRiskFunctionUsageCheck.class,
       CustomLowRiskFunctionUsageCheck.class,
-      CustomLowRiskIniFunctionUsageCheck.class
+      CustomLowRiskIniFunctionUsageCheck.class,
+      CustomGenericExceptionCheck.class
 
     );
   }

@@ -42,7 +42,7 @@ public class CustomHighRiskFunctionUsageCheck extends FunctionUsageCheck {
 
   public static final String KEY = "S10000";
   // 自定义提示说明
-  private static final String MESSAGE_CUSTOM = "(Teamone) 此方法危险，请谨慎使用 ";
+  private static final String MESSAGE_CUSTOM = "(Teamone) 此方法危险，禁止使用 ";
 
   private static final ImmutableSet<String> SEARCHING_STRING_FUNCTIONS = ImmutableSet.of(
     "eval","exec","system","passthru","shell_exec","popen","assert","session_register","session_is_registered","session_unregister");

@@ -1,5 +1,5 @@
 {
-  "title": "谨慎使用危险函数",
+  "title": "禁止使用危险函数",
   "type": "VULNERABILITY",
   "status": "ready",
   "remediation": {
@@ -9,7 +9,7 @@
   "tags": [
     "obsolete"
   ],
-  "defaultSeverity": "Critical",
+  "defaultSeverity": "Blocker",
   "ruleSpecification": "RSPEC-10000",
   "sqKey": "S10000",
   "scope": "All"

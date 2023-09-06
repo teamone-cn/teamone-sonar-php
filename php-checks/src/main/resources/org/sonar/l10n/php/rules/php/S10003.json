@@ -1,6 +1,6 @@
 {
   "title": "配置信息应直接配置",
-  "type": "BUG",
+  "type": "CODE_SMELL",
   "status": "ready",
   "remediation": {
     "func": "Constant\/Issue",
