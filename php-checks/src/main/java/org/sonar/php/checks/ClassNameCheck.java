@@ -20,8 +20,11 @@
 package org.sonar.php.checks;
 
 import com.google.common.collect.ImmutableList;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import org.sonar.check.Rule;
 import org.sonar.check.RuleProperty;
 import org.sonar.plugins.php.api.tree.Tree;
@@ -38,6 +41,8 @@ public class ClassNameCheck extends PHPSubscriptionCheck {
   public static final String DEFAULT = "^[A-Z][a-zA-Z0-9]*$";
   private Pattern pattern = null;
 
+  private List<Pattern> patterns = new ArrayList<>();
+
   @RuleProperty(
     key = "format",
     defaultValue = DEFAULT)
@@ -51,7 +56,14 @@ public class ClassNameCheck extends PHPSubscriptionCheck {
 
   @Override
   public void init() {
-    pattern = Pattern.compile(format);
+
+    String[] split = format.split(",");
+    if (split.length > 0) {
+      for (String pf : split) {
+        pattern = Pattern.compile(pf);
+        patterns.add(pattern);
+      }
+    }
   }
 
   @Override
@@ -59,9 +71,11 @@ public class ClassNameCheck extends PHPSubscriptionCheck {
     NameIdentifierTree nameTree = ((ClassDeclarationTree) tree).name();
     String className = nameTree.text();
 
-    if (!pattern.matcher(className).matches()) {
-      String message = String.format(MESSAGE, className, this.format);
-      context().newIssue(this, nameTree, message);
+    for (Pattern p : patterns) {
+      if (!p.matcher(className).matches()) {
+        String message = String.format(MESSAGE, className, this.format);
+        context().newIssue(this, nameTree, message);
+      }
     }
   }
 

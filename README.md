@@ -2,6 +2,10 @@
 
 SonarPHP is a [static code analyser](https://en.wikipedia.org/wiki/Static_program_analysis) for PHP language used as an extension for the [SonarQube](http://www.sonarqube.org/) platform. It will allow you to produce stable and easily supported code by helping you find and correct bugs, vulnerabilities and smells in your code.
 
+# 打包命令
+mvn license:format
+
+mvn clean install -DskipTests
 
 # Features
 * 140+ rules
