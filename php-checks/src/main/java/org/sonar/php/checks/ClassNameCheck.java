@@ -70,13 +70,18 @@ public class ClassNameCheck extends PHPSubscriptionCheck {
   public void visitNode(Tree tree) {
     NameIdentifierTree nameTree = ((ClassDeclarationTree) tree).name();
     String className = nameTree.text();
-
+    int matchFlag = 0;
     for (Pattern p : patterns) {
-      if (!p.matcher(className).matches()) {
-        String message = String.format(MESSAGE, className, this.format);
-        context().newIssue(this, nameTree, message);
+      if (p.matcher(className).matches()) {
+        matchFlag++;
       }
     }
+
+    if (matchFlag == 0){
+      String message = String.format(MESSAGE, className, this.format);
+      context().newIssue(this, nameTree, message);
+    }
+
   }
 
 }

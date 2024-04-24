@@ -1,0 +1,22 @@
+{
+  "title": "注释首行应符合注释规则",
+  "type": "CODE_SMELL",
+  "status": "ready",
+  "remediation": {
+    "func": "Constant\/Issue",
+    "constantCost": "2min"
+  },
+  "tags": [
+    "cwe",
+    "error-handling"
+  ],
+  "defaultSeverity": "Major",
+  "ruleSpecification": "RSPEC-10004",
+  "sqKey": "S10004",
+  "scope": "Main",
+  "securityStandards": {
+    "CWE": [
+      397
+    ]
+  }
+}
