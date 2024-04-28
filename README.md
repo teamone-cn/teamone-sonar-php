@@ -1,11 +1,34 @@
-# SonarPHP [![Build Status](https://travis-ci.org/SonarSource/sonar-php.svg?branch=master)](https://travis-ci.org/SonarSource/sonar-php)
+# Teamone Sonar PHP
+Teamone Sonar PHP 是基于 SonarPHP 修改部分规则和自定义规则，用于对PHP工程师书写的 PHP 代码进行检测和bug提示，帮助建立代码规范，养成编码习惯，提升编码质量
 
-SonarPHP is a [static code analyser](https://en.wikipedia.org/wiki/Static_program_analysis) for PHP language used as an extension for the [SonarQube](http://www.sonarqube.org/) platform. It will allow you to produce stable and easily supported code by helping you find and correct bugs, vulnerabilities and smells in your code.
+# 主要特性
+1.配置化读取Json配置文件，实现同一规则对于git仓库下的不同项目采取不同的规则内容，修改立即生效，只需重新执行检测即可应用到最新的规则
 
-# 打包命令
+2.新增了6种规则分别为：
+- 函数方法即将丢弃
+- 注释首行应符合注释规则（正则）
+- 禁止使用危险函数
+- 禁止使用已被删除的函数
+- 配置信息应直接配置
+- 需要有自定义的异常类（正则）
+
+3. 修改源代码中存在的其他导致检测不到的bug，完善一些检查机制
+
+# 安装方式
+执行如下打包命令
+```shell
 mvn license:format
 
 mvn clean install -DskipTests
+```
+
+将打出来的 jar 包放置在 Sonar 对应的 plugins 的 jar 包文件夹下
+
+# 其他可参考官网readme：
+
+# SonarPHP [![Build Status](https://travis-ci.org/SonarSource/sonar-php.svg?branch=master)](https://travis-ci.org/SonarSource/sonar-php)
+
+SonarPHP is a [static code analyser](https://en.wikipedia.org/wiki/Static_program_analysis) for PHP language used as an extension for the [SonarQube](http://www.sonarqube.org/) platform. It will allow you to produce stable and easily supported code by helping you find and correct bugs, vulnerabilities and smells in your code.
 
 # Features
 * 140+ rules
